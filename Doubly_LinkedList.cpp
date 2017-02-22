@@ -7,7 +7,7 @@ Doubly_LinkedList::Doubly_LinkedList() : LinkedList(0)
 	root -> number = 0;
 	root -> year = " ";
 	root -> previous_item = nullptr;
-	root -> next_item = tail;
+	root -> next_item = nullptr;
 
 	tail = new node;
 	tail -> name = "Tail";
@@ -41,7 +41,7 @@ bool Doubly_LinkedList::insert_node(node * NewNode, int position)
 /*****************************************************************************
  * If first node in the list
 *****************************************************************************/	
-	if (!root -> next_item || !tail -> previous_item)
+	if (!root -> next_item)
 	{
 		std::cout << "First item in the list." << std::endl;
 		root -> next_item = NewNode;
@@ -87,12 +87,24 @@ bool Doubly_LinkedList::insert_node(node * NewNode, int position)
 ****************************************************************************/ 
 void Doubly_LinkedList::push_front(node * NewNode)
 {
-	NewNode -> next_item = root -> next_item;
-	NewNode -> previous_item = root;
-	next_node = root -> next_item;
-	next_node -> previous_item = NewNode;
-	root -> next_item = NewNode;
-	++LinkedList;
+	if (!root -> next_item)
+	{
+		std::cout << "First item in the list." << std::endl;
+		root -> next_item = NewNode;
+		tail -> previous_item = NewNode;
+		NewNode -> previous_item = root;
+		NewNode -> next_item = tail;
+		++LinkedList;
+	} 
+	else
+	{
+		NewNode -> next_item = root -> next_item;
+		NewNode -> previous_item = root;
+		next_node = root -> next_item;
+		next_node -> previous_item = NewNode;
+		root -> next_item = NewNode;
+		++LinkedList;
+	}
 }
 
 
@@ -128,7 +140,7 @@ bool Doubly_LinkedList::remove(int position)
 /*****************************************************************************
  * Protect the root and the tail nodes
 *****************************************************************************/
-	if (position <= 0 || position > LinkedList+1)
+	if (position <= 0 || position > LinkedList)
 	{
 		std::cout << "Error!!! Out of range." << std::endl;
 		return(false);
